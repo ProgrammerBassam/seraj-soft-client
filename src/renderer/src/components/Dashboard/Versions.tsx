@@ -1,5 +1,4 @@
-import { useState } from 'react'
-import '../assets/index.css'
+import '../../assets/index.css'
 
 function Versions(): JSX.Element {
 

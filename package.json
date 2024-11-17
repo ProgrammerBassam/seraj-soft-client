@@ -1,6 +1,6 @@
 {
-  "name": "seraj-soft-client",
-  "version": "1.0.0",
+  "name": "seraj_soft_client",
+  "version": "2.0.0",
   "description": "An Electron application with React and TypeScript",
   "main": "./out/main/index.js",
   "author": "example.com",
@@ -34,7 +34,8 @@
     "@mui/x-date-pickers-pro": "^7.22.2",
     "@mui/x-tree-view": "^7.22.1",
     "dayjs": "^1.11.13",
-    "electron-updater": "^6.1.7"
+    "electron-updater": "^6.1.7",
+    "getmac": "^6.6.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",
