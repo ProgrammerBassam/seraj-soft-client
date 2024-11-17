@@ -17,6 +17,7 @@ function createWindow(): void {
     vibrancy: 'under-window',
     visualEffectState: 'active',
     titleBarStyle: 'hidden',
+    transparent: true, // Enable transparency
     trafficLightPosition: { y: 15, x: 10 },
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

@@ -1,11 +1,12 @@
 import { useState } from 'react'
+import '../assets/index.css'
 
 function Versions(): JSX.Element {
 
 
   return (
     <ul className="versions">
-      <li className="electron-version">Electron v111</li>
+      <li className="electron-version">إصدار</li>
     </ul>
   )
 }
