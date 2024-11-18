@@ -1,7 +1,8 @@
-import { electronApp, is, optimizer } from '@electron-toolkit/utils'
-import { app, BrowserWindow, ipcMain, shell } from 'electron'
-import { join } from 'path'
-import icon from '../../resources/icon.png?asset'
+import { electronApp, is, optimizer } from '@electron-toolkit/utils';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { join } from 'path';
+import icon from '../../resources/icon.png?asset';
+import { setupApiHandlers, setupMacApiHandlers } from './api';
 
 function createWindow(): void {
   // Create the browser window.
@@ -19,6 +20,7 @@ function createWindow(): void {
     titleBarStyle: 'hidden',
     transparent: true, // Enable transparency
     trafficLightPosition: { y: 15, x: 10 },
+    icon: './assets/mac_icon.icns',
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: true,
@@ -61,6 +63,8 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
+  setupMacApiHandlers()
+  setupApiHandlers()
   createWindow()
 
 

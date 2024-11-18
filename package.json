@@ -33,9 +33,13 @@
     "@mui/x-date-pickers": "^7.22.2",
     "@mui/x-date-pickers-pro": "^7.22.2",
     "@mui/x-tree-view": "^7.22.1",
+    "axios": "^1.7.7",
     "dayjs": "^1.11.13",
     "electron-updater": "^6.1.7",
-    "getmac": "^6.6.0"
+    "express": "^4.21.1",
+    "getmac": "^6.6.0",
+    "react-router": "^6.28.0",
+    "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
     "@electron-toolkit/eslint-config-prettier": "^2.0.0",

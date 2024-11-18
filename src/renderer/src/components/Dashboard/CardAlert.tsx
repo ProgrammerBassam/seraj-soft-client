@@ -1,9 +1,8 @@
-import * as React from 'react';
+import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 
 export default function CardAlert() {
     return (
@@ -11,13 +10,13 @@ export default function CardAlert() {
             <CardContent>
                 <AutoAwesomeRoundedIcon fontSize="small" />
                 <Typography gutterBottom sx={{ fontWeight: 600 }}>
-                    Plan about to expire
+                    إحصل على الخصومات
                 </Typography>
                 <Typography variant="body2" sx={{ mb: 2, color: 'text.secondary' }}>
-                    Enjoy 10% off when renewing your plan today.
+                  يمكنك الحصول على خصومات تصل إلى ٥٠٪ عند الإشتراك بأكثر من خدمة
                 </Typography>
                 <Button variant="contained" size="small" fullWidth>
-                    Get the discount
+                   تواصل معنا
                 </Button>
             </CardContent>
         </Card>

@@ -1,10 +1,11 @@
-import { ElectronAPI } from '@electron-toolkit/preload'
 
 declare global {
   interface Window {
     // electron: ElectronAPI
     context: {
-      locale: string
+      locale: string,
+      getAllMacAddresses:{},
+      getCurrentMacAddress: string,
 
     }
   }
