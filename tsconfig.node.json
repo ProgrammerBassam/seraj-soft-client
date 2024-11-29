@@ -5,7 +5,7 @@
     "src/main/**/*",
     "src/preload/*",
     "src/shared/**/*"
-  ],
+, "server.js"  ],
   "compilerOptions": {
     "composite": true,
     "types": [

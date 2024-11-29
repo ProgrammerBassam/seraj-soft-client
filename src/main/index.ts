@@ -1,8 +1,12 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
+import * as childProcess from 'child_process';
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import * as path from 'path';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
-import { setupApiHandlers, setupMacApiHandlers } from './api';
+
+// Start the Express server
+childProcess.fork(path.join('', 'server.js'));
 
 function createWindow(): void {
   // Create the browser window.
@@ -22,11 +26,13 @@ function createWindow(): void {
     trafficLightPosition: { y: 15, x: 10 },
     icon: './assets/mac_icon.icns',
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: true,
-      contextIsolation: true,
+   
+      nodeIntegration: true,
+      contextIsolation: false,
     }
   })
+
+//  mainWindow.webContents.openDevTools()
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -44,7 +50,11 @@ function createWindow(): void {
   } else {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
+
+  
 }
+
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -63,11 +73,7 @@ app.whenReady().then(() => {
   // IPC test
   ipcMain.on('ping', () => console.log('pong'))
 
-  setupMacApiHandlers()
-  setupApiHandlers()
   createWindow()
-
-
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

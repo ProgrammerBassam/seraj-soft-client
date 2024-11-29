@@ -4,8 +4,8 @@ import type { } from '@mui/x-data-grid/themeAugmentation';
 import type { } from '@mui/x-date-pickers/themeAugmentation';
 import type { } from '@mui/x-tree-view/themeAugmentation';
 import { Route, Routes } from 'react-router';
+import { Checking } from './components/Checking/Checking';
 import { DraggableTopBar } from './components/Dashboard';
-import { Checking } from './pages/Checking';
 import { Dashboard } from './pages/Dashboard';
 
 function App() {
