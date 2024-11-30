@@ -12,7 +12,7 @@ function createWindow(): void {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
-    height: 670,
+    height: 700,
     show: false,
     autoHideMenuBar: true,
     ...(process.platform === 'linux' ? { icon } : {}),
@@ -26,13 +26,13 @@ function createWindow(): void {
     trafficLightPosition: { y: 15, x: 10 },
     icon: './assets/mac_icon.icns',
     webPreferences: {
-   
+      webSecurity: false,
       nodeIntegration: true,
       contextIsolation: false,
     }
   })
 
-//  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('ready-to-show', () => {
     mainWindow.show()
@@ -51,7 +51,7 @@ function createWindow(): void {
     mainWindow.loadFile(join(__dirname, '../renderer/index.html'))
   }
 
-  
+
 }
 
 

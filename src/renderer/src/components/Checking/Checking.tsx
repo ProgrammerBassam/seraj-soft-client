@@ -1,4 +1,4 @@
-import { Box, Button, Divider, Paper, Typography } from '@mui/material';
+import { Alert, Box, Button, Divider, Paper, Typography } from '@mui/material';
 import { Theme } from '@mui/material/styles';
 import { QRCodeSVG } from 'qrcode.react';
 import { useNavigate } from 'react-router-dom';
@@ -16,7 +16,7 @@ export function Checking() {
     });
 
     if (loading) {
-        return <LoadingSpinner message={error || 'فحص البيانات...'} />;
+        return <LoadingSpinner message='فحص البيانات...' />;
     }
 
     return (
@@ -34,69 +34,71 @@ export function Checking() {
         >
             {/* Company Logo and Info */}
             <Box
-    sx={(theme: Theme) => ({
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        marginBottom: theme.spacing(4),
-        textAlign: 'right', // Align text to the left for better readability
-    })}
->
-    {/* Company Logo */}
-    <Box
-        component="img"
-        src={appIcon}
-        
-        sx={(theme: Theme) => ({
-            width: 90,
-            height: 90,
-         
-            marginLeft: theme.spacing(3), // Add spacing between logo and text
-           
-            borderRadius: '50%',
-            boxShadow: `0px 4px 12px ${theme.palette.grey[300]}`,
-        })}
-    />
+                sx={(theme: Theme) => ({
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                    marginBottom: theme.spacing(4),
+                    textAlign: 'right', // Align text to the left for better readability
+                })}
+            >
+                {/* Company Logo */}
+                <Box
+                    component="img"
+                    src={appIcon}
 
-    {/* Company Information */}
-    <Box>
-        <Typography
-            variant="h5"
-            sx={(theme: Theme) => ({
-                fontWeight: 600,
-                color: theme.palette.primary.main,
-                marginBottom: theme.spacing(1),
-            })}
-        >
-            شركة سراج سوفت
-        </Typography>
-        <Typography
-            variant="body1"
-            sx={(theme: Theme) => ({
-                color: theme.palette.text.secondary,
-            })}
-        >
-            نظام سراج سوفت المكتبي
-        </Typography>
-    </Box>
-</Box>
+                    sx={(theme: Theme) => ({
+                        width: 90,
+                        height: 90,
+
+                        marginLeft: theme.spacing(3), // Add spacing between logo and text
+
+                        borderRadius: '50%',
+                        boxShadow: `0px 4px 12px ${theme.palette.grey[300]}`,
+                    })}
+                />
+
+                {/* Company Information */}
+                <Box>
+                    <Typography
+                        variant="h5"
+                        sx={(theme: Theme) => ({
+                            fontWeight: 600,
+                            color: theme.palette.primary.main,
+                            marginBottom: theme.spacing(1),
+                        })}
+                    >
+                        شركة سراج سوفت
+                    </Typography>
+                    <Typography
+                        variant="body1"
+                        sx={(theme: Theme) => ({
+                            color: theme.palette.text.secondary,
+                        })}
+                    >
+                        نظام سراج سوفت المكتبي
+                    </Typography>
+                </Box>
+            </Box>
+
+            <Alert variant="outlined" severity="error">{error}</Alert>
 
             {/* QR Code Section */}
             <Box sx={{ textAlign: 'center' }}>
                 <Typography
                     variant="h6"
                     gutterBottom
-                    sx={{ fontWeight: 500, color: error ? (theme: Theme) => theme.palette.error.main : (theme: Theme) => theme.palette.text.secondary }}
+                    sx={{ fontWeight: 500, color: (theme: Theme) => theme.palette.text.secondary, marginTop: (theme: Theme) => theme.spacing(1), }}
                 >
-                    {error ? 'خطأ' : 'الرجاء مسح الكود لتسجيل البيانات'}
+                    'الرجاء مسح الكود لتسجيل البيانات'
                 </Typography>
                 <Paper
                     elevation={4}
                     sx={{
                         padding: (theme: Theme) => theme.spacing(3),
                         borderRadius: 4,
-                        marginTop:  (theme: Theme) => theme.spacing(1),
+                        marginTop: (theme: Theme) => theme.spacing(1),
                         textAlign: 'center',
                         display: 'inline-block',
                         boxShadow: (theme: Theme) => `0px 6px 14px ${theme.palette.grey[300]}`,
@@ -111,7 +113,7 @@ export function Checking() {
                 <Box sx={{ marginTop: (theme: Theme) => theme.spacing(3) }}>
                     <Button
                         variant="contained"
-                      
+
                         sx={{
                             marginLeft: (theme: Theme) => theme.spacing(1),
                             paddingX: (theme: Theme) => theme.spacing(3),
@@ -119,11 +121,11 @@ export function Checking() {
                         onClick={handleGenerateAppCode}
                         disabled={loading}
                     >
-                       إبدأ التحقق
+                        إبدأ التحقق
                     </Button>
                     <Button
                         variant="outlined"
-                     
+
                         sx={{ paddingX: (theme: Theme) => theme.spacing(3) }}
                         onClick={clearStorage}
                     >

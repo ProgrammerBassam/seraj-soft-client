@@ -11,8 +11,8 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <AppTheme>
       <CssBaseline enableColorScheme />
       <BrowserRouter>
-      <App />
-    </BrowserRouter>
+        <App />
+      </BrowserRouter>
     </AppTheme>,
   </React.StrictMode>
 )

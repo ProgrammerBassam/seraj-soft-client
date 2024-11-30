@@ -24,8 +24,10 @@ export const useAppCode = (onValidCode: () => void) => {
         setLoading(true);
         try {
             const response = await validateAppCode(code);
-            if (response.status === 'no') {
+            if (response.status) {
                 onValidCode(); // Navigate to the dashboard
+            } else {
+                setError(response.message ?? "خطأ غير متوقع!")
             }
         } catch (err) {
             setError('Invalid app code. Please generate a new one.');
@@ -41,12 +43,14 @@ export const useAppCode = (onValidCode: () => void) => {
         const newAppCode = generateRandomString();
         try {
             const response = await validateAppCode(newAppCode);
-            if (response.status === 'ok') {
+            if (response.status) {
                 localStorage.setItem('appCode', newAppCode);
                 onValidCode(); // Navigate to the dashboard
+            } else {
+                setError(response.message ?? "خطأ غير متوقع!")
             }
         } catch (err) {
-            setError('Error validating app code. Please try again.');
+            setError("خطأ غير متوقع!");
         } finally {
             setLoading(false);
         }
