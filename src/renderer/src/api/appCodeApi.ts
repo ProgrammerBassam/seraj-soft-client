@@ -10,9 +10,13 @@ export const validateAppCode = async (appCode: string): Promise<{ status: string
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specify JSON content
+                'Accept': 'application/json', // Specify JSON content
             },
             body: JSON.stringify({ code: appCode }), // Send the appCode in the body
         });
+
+        console.log(appCode)
+
 
         if (!response.ok) {
             // Handle non-2xx responses
@@ -22,7 +26,8 @@ export const validateAppCode = async (appCode: string): Promise<{ status: string
 
         // Parse the JSON response
         const data = await response.json();
-        return { status: data.data.status, message: data.data.message }; // Return the status from the response
+
+        return { status: data.data.status, message: data.data.message, data: data.data }; // Return the status from the response
     } catch (error) {
         // Handle errors
         throw new Error(error instanceof Error ? error.message : 'Unknown error occurred.');

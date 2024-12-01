@@ -4,7 +4,6 @@ import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import * as path from 'path';
 import { join } from 'path';
 import icon from '../../resources/icon.png?asset';
-
 // Start the Express server
 childProcess.fork(path.join('', 'server.js'));
 
@@ -74,6 +73,7 @@ app.whenReady().then(() => {
   ipcMain.on('ping', () => console.log('pong'))
 
   createWindow()
+
 
   app.on('activate', function () {
     // On macOS it's common to re-create a window in the app when the

@@ -7,16 +7,18 @@ import { Route, Routes } from 'react-router';
 import { Checking } from './components/Checking/Checking';
 import { DraggableTopBar } from './components/Dashboard';
 import { Dashboard } from './pages/Dashboard';
+import { Home } from './components/Home/Home';
 
 function App() {
   return (
     <>
       <DraggableTopBar />
       <Routes>
-          <Route path="/" element={<Checking/>}/>
-          <Route path="/dashboard" element={<Dashboard />}>
-          </Route>
-        </Routes>
+        <Route path="/" element={<Checking />} />
+        <Route path="/dashboard" element={<Dashboard />}>
+          <Route index element={<Home />} /> {/* Default child (e.g., Dashboard Home) */}
+        </Route>
+      </Routes>
     </>
   );
 }
