@@ -45,11 +45,11 @@ export const useAppCode = (onValidCode: (data) => void) => {
                 setError(response.message ?? "خطأ غير متوقع!")
             }
         } catch (err) {
-            setError('Invalid app code. Please generate a new one.');
-            localStorage.removeItem('appCode');
-            const newAppCode = generateRandomString();
-            localStorage.setItem('appCode', newAppCode);
-            setRandomString(newAppCode);
+            setError("خطأ غير متوقع!");
+            /* localStorage.removeItem('appCode');
+             const newAppCode = generateRandomString();
+             localStorage.setItem('appCode', newAppCode);*/
+            setRandomString(code);
         } finally {
             setLoading(false);
         }

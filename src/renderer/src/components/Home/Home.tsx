@@ -1,67 +1,36 @@
 import React from 'react';
 import { Box, Typography, Alert, Paper, Divider, Avatar, Stack, Chip } from '@mui/material';
-import SmsIcon from '@mui/icons-material/Sms';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import SmsIcon from '@mui/icons-material/Sms';
 import ApiIcon from '@mui/icons-material/Api';
-import dayjs from 'dayjs';
+import { useServiceStatus } from './useServiceStatus';
+import { useWhatsAppStatus } from './useWhatsAppStatus'; // Custom hook for WhatsApp status
 
 export function Home() {
-    // Helper functions
-    const calculateRemainingDays = (endDate: string | null) => {
-        if (!endDate) return null;
+    const smsStatus = useServiceStatus('smsEndDate');
+    const whatsappServiceStatus = useServiceStatus('whatsappEndDate');
+    const apiStatus = useServiceStatus('apiEndDate');
+    const { isConnected } = useWhatsAppStatus(); // WhatsApp connection status
 
-        const today = dayjs();
-        const targetDate = dayjs(endDate);
-        const diff = targetDate.diff(today, 'day');
-
-        return diff >= 0 ? diff : null; // Return days remaining, or null if expired
-    };
-
-    const isServiceActive = (endDate: string | null) => {
-        const today = dayjs();
-        const targetDate = dayjs(endDate);
-        return targetDate.isAfter(today);
-    };
-
-    // Retrieve and process values from localStorage
-    const smsEndDate = localStorage.getItem('smsEndDate');
-    const whatsappEndDate = localStorage.getItem('whatsappEndDate');
-    const apiEndDate = localStorage.getItem('apiEndDate');
-
-
-
-    const canUseSms = isServiceActive(smsEndDate);
-    const remainingSmsDays = calculateRemainingDays(smsEndDate);
-
-    const canUseWhatsapp = isServiceActive(whatsappEndDate);
-    const remainingWhatsappDays = calculateRemainingDays(whatsappEndDate);
-
-    const canUseApi = isServiceActive(apiEndDate);
-    const remainingApiDays = calculateRemainingDays(apiEndDate);
-
-    // Helper to render status chips
     const renderStatusChip = (status: boolean) => (
         <Chip
             label={status ? 'متاح' : 'غير متاح'}
-            sx={(theme) => ({
-                color: status ? theme.palette.success.dark : theme.palette.error.dark,
-                backgroundColor: status ? theme.palette.success.light : theme.palette.error.light,
-                fontWeight: 'bold',
-            })}
-
+            variant="outlined"
+            color={status ? 'success' : 'error'}
         />
     );
 
     return (
         <Box
-            sx={(theme) => ({
+            sx={{
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'flex-start',
-                padding: theme.spacing(4),
+                padding: 4,
                 minHeight: '100vh',
-            })}
+                backgroundColor: '#f9fafc',
+            }}
         >
             {/* Page Description */}
             <Alert
@@ -80,120 +49,116 @@ export function Home() {
 
             {/* User Data Display */}
             <Paper
-                elevation={4}
+                elevation={6}
                 sx={{
                     padding: 4,
                     borderRadius: 2,
                     maxWidth: 600,
                     width: '100%',
+                    backgroundColor: '#ffffff',
                 }}
             >
-                {/* Header */}
-                <Box sx={{ textAlign: 'center', marginBottom: 3 }}>
-                    <Typography variant="h6" sx={{ fontWeight: 600 }}>
-                        بيانات المستخدم والخدمات
-                    </Typography>
-                </Box>
+                <Typography
+                    variant="h6"
+                    sx={{
+                        textAlign: 'center',
+                        marginBottom: 3,
+                        fontWeight: 'bold',
+                        color: 'primary.main',
+                    }}
+                >
+                    خدمات المستخدم
+                </Typography>
 
                 <Divider sx={{ marginBottom: 2 }} />
 
                 {/* SMS Section */}
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ marginBottom: 3 }}
-                >
+                <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
                     <Avatar sx={{ bgcolor: 'primary.main', color: 'white' }}>
                         <SmsIcon />
                     </Avatar>
-                    <Box sx={{ flex: 1, pr: 2 }}>
+                    <Box sx={{ flex: 1, pr: 2, textAlign: 'right' }}>
                         <Typography variant="body1">
                             <strong>الرسائل النصية:</strong>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            تاريخ الانتهاء: {smsEndDate || 'غير متوفر'}
+                            تاريخ الانتهاء: {smsStatus.endDate || 'غير متوفر'}
                         </Typography>
-                        {remainingSmsDays !== null && (
+                        {smsStatus.remainingDays !== null ? (
                             <Typography variant="body2" color="success.main">
-                                الأيام المتبقية: {remainingSmsDays} يوم
+                                الأيام المتبقية: {smsStatus.remainingDays} يوم
                             </Typography>
-                        )}
-                        {remainingSmsDays === null && (
+                        ) : (
                             <Typography variant="body2" color="error.main">
                                 الخدمة منتهية
                             </Typography>
                         )}
                     </Box>
-                    {renderStatusChip(canUseSms)}
+                    {renderStatusChip(smsStatus.isActive)}
                 </Stack>
 
                 <Divider sx={{ marginBottom: 2 }} />
 
-                {/* WhatsApp Section */}
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ marginBottom: 3 }}
-                >
+                {/* WhatsApp Service Section */}
+                <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
                     <Avatar sx={{ bgcolor: 'success.main', color: 'white' }}>
                         <WhatsAppIcon />
                     </Avatar>
-                    <Box sx={{ flex: 1, pr: 2 }}>
+                    <Box sx={{ flex: 1, pr: 2, textAlign: 'right' }}>
                         <Typography variant="body1">
                             <strong>استخدام واتساب:</strong>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            تاريخ الانتهاء: {whatsappEndDate || 'غير متوفر'}
+                            تاريخ الانتهاء: {whatsappServiceStatus.endDate || 'غير متوفر'}
                         </Typography>
-                        {remainingWhatsappDays !== null && (
+                        {whatsappServiceStatus.remainingDays !== null ? (
                             <Typography variant="body2" color="success.main">
-                                الأيام المتبقية: {remainingWhatsappDays} يوم
+                                الأيام المتبقية: {whatsappServiceStatus.remainingDays} يوم
                             </Typography>
-                        )}
-                        {remainingWhatsappDays === null && (
+                        ) : (
                             <Typography variant="body2" color="error.main">
                                 الخدمة منتهية
                             </Typography>
                         )}
+
+                        {/* WhatsApp Connection Status */}
+                        <Typography
+                            variant="body2"
+                            sx={{ marginTop: 1, fontWeight: 'bold', color: isConnected ? 'success.main' : 'error.main' }}
+                        >
+                            حالة الاتصال: {isConnected ? 'متصل' : 'غير متصل'}
+                        </Typography>
                     </Box>
-                    {renderStatusChip(canUseWhatsapp)}
+                    {renderStatusChip(whatsappServiceStatus.isActive)}
                 </Stack>
 
                 <Divider sx={{ marginBottom: 2 }} />
 
                 {/* API Section */}
-                <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={2}
-                    sx={{ marginBottom: 3 }}
-                >
+                <Stack direction="row" alignItems="center" spacing={2} sx={{ marginBottom: 3 }}>
                     <Avatar sx={{ bgcolor: 'info.main', color: 'white' }}>
                         <ApiIcon />
                     </Avatar>
-                    <Box sx={{ flex: 1, pr: 2 }}>
+                    <Box sx={{ flex: 1, pr: 2, textAlign: 'right' }}>
                         <Typography variant="body1">
-                            <strong>واجهة برمجة التطبيقات (API):</strong>
+                            <strong>تصفح البيانات من التطبيق:</strong>
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                            تاريخ الانتهاء: {apiEndDate || 'غير متوفر'}
+                            تاريخ الانتهاء: {apiStatus.endDate || 'غير متوفر'}
                         </Typography>
-                        {remainingApiDays !== null && (
+                        {apiStatus.remainingDays !== null ? (
                             <Typography variant="body2" color="success.main">
-                                الأيام المتبقية: {remainingApiDays} يوم
+                                الأيام المتبقية: {apiStatus.remainingDays} يوم
                             </Typography>
-                        )}
-                        {remainingApiDays === null && (
+                        ) : (
                             <Typography variant="body2" color="error.main">
                                 الخدمة منتهية
                             </Typography>
                         )}
                     </Box>
-                    {renderStatusChip(canUseApi)}
+                    {renderStatusChip(apiStatus.isActive)}
                 </Stack>
             </Paper>
-        </Box >
+        </Box>
     );
 }

@@ -8,6 +8,7 @@ import { Checking } from './components/Checking/Checking';
 import { DraggableTopBar } from './components/Dashboard';
 import { Dashboard } from './pages/Dashboard';
 import { Home } from './components/Home/Home';
+import { WhatsApp } from './components/Whatsapp/Whatsapp';
 
 function App() {
   return (
@@ -16,9 +17,19 @@ function App() {
       <Routes>
         <Route path="/" element={<Checking />} />
         <Route path="/dashboard" element={<Dashboard />}>
-          <Route index element={<Home />} /> {/* Default child (e.g., Dashboard Home) */}
+          <Route index element={<Home />} /> {/* Dashboard Home */}
+          <Route path="messages">
+            <Route path="whatsapp" element={<WhatsApp />} />
+            <Route path="sms" element={<div>SMS Messages</div>} />
+            <Route path="reports" element={<div>Reports</div>} />
+          </Route>
         </Route>
+        <Route path="/settings" element={<div>Settings Page</div>} />
+        <Route path="/about" element={<div>About Us Page</div>} />
+        <Route path="/suggestions" element={<div>Suggestions Page</div>} />
       </Routes>
+
+
     </>
   );
 }

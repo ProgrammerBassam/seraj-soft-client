@@ -1,18 +1,31 @@
-
-import { contextBridge, ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron';
 
 if (!process.contextIsolated) {
-  throw new Error('contextIsolation must be enabled in the BrowserWindow')
+  throw new Error('contextIsolation must be enabled in the BrowserWindow');
 }
 
+type UserInfo = {
+  name: string; // The user's name
+  phone: string; // The user's phone number
+  profilePicture?: string; // URL to the profile picture
+};
+
+
 try {
+  // Expose API to the renderer process
   contextBridge.exposeInMainWorld('context', {
-    locale: navigator.language,
-    getAllMacAddresses: async () => ipcRenderer.invoke('api:getAllMacAddresses'),
-    getCurrentMacAddress: async () => ipcRenderer.invoke('api:getCurrentMacAddress'),
-    getData: (args: any) => ipcRenderer.invoke('api:getData', args),
-    saveData: (data: any) => ipcRenderer.invoke('api:saveData', data),
-  })
+    onQRCode: (callback: (qr: string) => void) => {
+      ipcRenderer.on('qr-code', (_, qr: string) => callback(qr));
+    },
+    onStatusChange: (callback: (status: string) => void) => {
+      ipcRenderer.on('whatsapp-status', (_, status: string) => callback(status));
+    },
+    reconnect: () => ipcRenderer.send('reconnect'),
+    clearSession: () => ipcRenderer.send('clear-session'),
+    onUserInfo: (callback: (userInfo: UserInfo) => void) =>
+      ipcRenderer.on('whatsapp-user-info', (_, userInfo: UserInfo) => callback(userInfo)),
+    getLastStatus: () => ipcRenderer.invoke('get-last-status'),
+  });
 } catch (error) {
-  console.error(error)
+  console.error(error);
 }

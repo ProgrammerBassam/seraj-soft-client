@@ -17,35 +17,42 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Stack from '@mui/material/Stack';
-import * as React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const mainListItems = [
-    { text: 'الرئيسية', icon: <HomeRoundedIcon /> ,disabled: false},
+    { text: 'الرئيسية', icon: <HomeRoundedIcon />, disabled: false, page: '/dashboard' },
     { text: 'خدمة الرسائل', icon: <MailOutlineIcon />, hasSublist: true, disabled: false },
     { text: 'المستخدمين (قريباً)', icon: <PeopleRoundedIcon />, disabled: true },
     { text: 'المبيعات (قريباً)', icon: <AssignmentRoundedIcon />, disabled: true },
 ];
 
 const sublistItems = [
-    { text: 'واتساب', icon: <WhatsApp /> ,disabled: false},
-    { text: 'الرسائل النصية', icon: <DraftsIcon /> , disabled: false},
-    { text: 'التقارير', icon: <AnalyticsRoundedIcon /> , disabled: false},
+    { text: 'واتساب', icon: <WhatsApp />, disabled: false, page: '/dashboard/messages/whatsapp' },
+    { text: 'الرسائل النصية', icon: <DraftsIcon />, disabled: false, page: '/dashboard/messages/sms' },
+    { text: 'التقارير', icon: <AnalyticsRoundedIcon />, disabled: false, page: '/dashboard/messages/reports' },
 ];
 
 const secondaryListItems = [
-    { text: 'الإعدادات', icon: <SettingsRoundedIcon /> },
-    { text: 'من نحن', icon: <InfoRoundedIcon /> },
-    { text: 'هل لديك إقتراح؟', icon: <HelpRoundedIcon /> },
+    { text: 'الإعدادات', icon: <SettingsRoundedIcon />, page: '/settings' },
+    { text: 'من نحن', icon: <InfoRoundedIcon />, page: '/about' },
+    { text: 'هل لديك إقتراح؟', icon: <HelpRoundedIcon />, page: '/suggestions' },
 ];
-
-
 
 export default function MenuContent() {
     const [openSublist, setOpenSublist] = useState(false);
+    const [selectedPage, setSelectedPage] = useState('/dashboard'); // Track selected page
+    const navigate = useNavigate();
 
     const handleToggleSublist = () => {
         setOpenSublist((prevOpen) => !prevOpen);
+    };
+
+    const handleNavigate = (page) => {
+        if (page) {
+            setSelectedPage(page); // Update selected page
+            navigate(page); // Navigate to the page
+        }
     };
 
     return (
@@ -53,8 +60,14 @@ export default function MenuContent() {
             <List dense>
                 {mainListItems.map((item, index) => (
                     <React.Fragment key={index}>
-                        <ListItem disablePadding sx={{ display: 'block' }} >
-                            <ListItemButton onClick={item.hasSublist ? handleToggleSublist : undefined} selected={index === 0} disabled={item.disabled}>
+                        <ListItem disablePadding sx={{ display: 'block' }}>
+                            <ListItemButton
+                                onClick={
+                                    item.hasSublist ? handleToggleSublist : () => handleNavigate(item.page)
+                                }
+                                selected={selectedPage === item.page} // Highlight if selected
+                                disabled={item.disabled}
+                            >
                                 <ListItemIcon>{item.icon}</ListItemIcon>
                                 <ListItemText primary={item.text} sx={{ textAlign: 'right' }} />
                                 {item.hasSublist && (openSublist ? <ExpandLess /> : <ExpandMore />)}
@@ -65,7 +78,12 @@ export default function MenuContent() {
                                 <List component="div" disablePadding>
                                     {sublistItems.map((subItem, subIndex) => (
                                         <ListItem key={subIndex} disablePadding>
-                                            <ListItemButton sx={{ pl: 4 }}  disabled={subItem.disabled}>
+                                            <ListItemButton
+                                                sx={{ pl: 4 }}
+                                                onClick={() => handleNavigate(subItem.page)}
+                                                selected={selectedPage === subItem.page} // Highlight if selected
+                                                disabled={subItem.disabled}
+                                            >
                                                 <ListItemIcon>{subItem.icon}</ListItemIcon>
                                                 <ListItemText primary={subItem.text} sx={{ textAlign: 'right' }} />
                                             </ListItemButton>
@@ -81,7 +99,10 @@ export default function MenuContent() {
             <List dense>
                 {secondaryListItems.map((item, index) => (
                     <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-                        <ListItemButton>
+                        <ListItemButton
+                            onClick={() => handleNavigate(item.page)}
+                            selected={selectedPage === item.page} // Highlight if selected
+                        >
                             <ListItemIcon>{item.icon}</ListItemIcon>
                             <ListItemText primary={item.text} sx={{ textAlign: 'right' }} />
                         </ListItemButton>

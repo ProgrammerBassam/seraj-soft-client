@@ -15,9 +15,6 @@ export const validateAppCode = async (appCode: string): Promise<{ status: string
             body: JSON.stringify({ code: appCode }), // Send the appCode in the body
         });
 
-        console.log(appCode)
-
-
         if (!response.ok) {
             // Handle non-2xx responses
             const errorData = await response.json();

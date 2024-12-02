@@ -115,48 +115,6 @@ export const getDesignTokens = (mode: PaletteMode) => {
                     dark: brand[700],
                 }),
             },
-            info: {
-                light: brand[100],
-                main: brand[300],
-                dark: brand[600],
-                contrastText: gray[50],
-                ...(mode === 'dark' && {
-                    contrastText: brand[300],
-                    light: brand[500],
-                    main: brand[700],
-                    dark: brand[900],
-                }),
-            },
-            warning: {
-                light: orange[300],
-                main: orange[400],
-                dark: orange[800],
-                ...(mode === 'dark' && {
-                    light: orange[400],
-                    main: orange[500],
-                    dark: orange[700],
-                }),
-            },
-            error: {
-                light: red[300],
-                main: red[400],
-                dark: red[800],
-                ...(mode === 'dark' && {
-                    light: red[400],
-                    main: red[500],
-                    dark: red[700],
-                }),
-            },
-            success: {
-                light: green[300],
-                main: green[400],
-                dark: green[800],
-                ...(mode === 'dark' && {
-                    light: green[400],
-                    main: green[500],
-                    dark: green[700],
-                }),
-            },
             grey: {
                 ...gray,
             },
@@ -245,27 +203,6 @@ export const colorSchemes = {
                 main: brand[400],
                 dark: brand[700],
                 contrastText: brand[50],
-            },
-            info: {
-                light: brand[100],
-                main: brand[300],
-                dark: brand[600],
-                contrastText: gray[50],
-            },
-            warning: {
-                light: orange[300],
-                main: orange[400],
-                dark: orange[800],
-            },
-            error: {
-                light: red[300],
-                main: red[400],
-                dark: red[800],
-            },
-            success: {
-                light: green[300],
-                main: green[400],
-                dark: green[800],
             },
             grey: {
                 ...gray,

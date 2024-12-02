@@ -39,7 +39,7 @@ export default function AppTheme({
                 shadows,
                 shape,
                 components: {
-                    ...inputsCustomizations,
+                    //  ...inputsCustomizations,
                     ...dataDisplayCustomizations,
                     ...feedbackCustomizations,
                     ...navigationCustomizations,
