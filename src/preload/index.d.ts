@@ -14,6 +14,7 @@ declare global {
       reconnect: () => void;
       clearSession: () => void;
       getLastStatus: () => void;
+      sendNotification: (title: string, body: string) => void;
     }
   }
 }

@@ -25,8 +25,10 @@ export const useAppCode = (onValidCode: (data) => void) => {
     useEffect(() => {
         const storedAppCode = localStorage.getItem('appCode');
         if (storedAppCode) {
+            console.log("123123")
             validateExistingAppCode(storedAppCode);
         } else {
+            console.log("123123")
             setLoading(false);
             const newAppCode = generateRandomString();
             localStorage.setItem('appCode', newAppCode);

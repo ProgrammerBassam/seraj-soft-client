@@ -25,6 +25,7 @@ try {
     onUserInfo: (callback: (userInfo: UserInfo) => void) =>
       ipcRenderer.on('whatsapp-user-info', (_, userInfo: UserInfo) => callback(userInfo)),
     getLastStatus: () => ipcRenderer.invoke('get-last-status'),
+    sendNotification: (title, body) => ipcRenderer.send('send-notification', { title, body }),
   });
 } catch (error) {
   console.error(error);

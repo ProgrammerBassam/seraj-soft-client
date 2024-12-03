@@ -5,8 +5,9 @@
     "src/main/**/*",
     "src/preload/*",
     "src/shared/**/*",
-    "server.js",
-    "src/renderer/src/components/Whatsapp/WhatsAppContext.tsx"
+    "src/shared/server.js",
+    "src/renderer/src/components/Whatsapp/WhatsAppContext.tsx",
+    "src/**/*"
   ],
   "compilerOptions": {
     "composite": true,

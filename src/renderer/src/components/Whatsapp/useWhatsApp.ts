@@ -39,5 +39,7 @@ export const useWhatsApp = () => {
         qrCode,
         status,
         userInfo,
+        setQrCode,
+        setStatus,
     };
 };

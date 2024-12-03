@@ -7,6 +7,7 @@ import { LoadingSpinner } from '../UI/LoadingSpinner';
 import appIcon from './app_icon.png'; // Adjust path if necessary
 import { useAppCode } from './useAppCode';
 import React from 'react';
+//import { Storage } from '@shared/utils/Storage';
 
 export function Checking() {
     const navigate = useNavigate();
@@ -23,6 +24,7 @@ export function Checking() {
         // Save
         localStorage.setItem('canUseWhatsapp', canUseWhatsapp);
         localStorage.setItem('whatsappEndDate', whatsappEndDate);
+        //  Storage.set('canUseWhatsapp', canUseWhatsapp);
 
         const canUseApi = data.can_use_api;
         const apiEndDate = data.api_end_date;
@@ -43,6 +45,7 @@ export function Checking() {
         localStorage.setItem('documentId', documentId);
         localStorage.setItem('isBlocked', isBlocked);
         localStorage.setItem('whyBlocked', whyBlocked);
+        // Storage.set('isBlocked', isBlocked);
 
         if (isBlocked) {
             navigate('/blocked');

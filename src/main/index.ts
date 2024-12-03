@@ -1,6 +1,6 @@
 import { electronApp, is, optimizer } from '@electron-toolkit/utils';
 import * as childProcess from 'child_process';
-import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell, Notification } from 'electron';
 import * as path from 'path';
 import { join } from 'path';
 import { DisconnectReason, makeWASocket, useMultiFileAuthState } from '@whiskeysockets/baileys';
@@ -8,12 +8,16 @@ import fs from 'fs-extra';
 import { Boom } from '@hapi/boom'
 
 // Start the Express server
-childProcess.fork(path.join('', 'server.js'));
+const serverProcess = childProcess.fork(path.join('', 'src/shared/server.js'));
+
+
 
 let mainWindow: BrowserWindow | null = null;
 
 let lastStatus: 'connecting' | 'connected' | 'disconnected' = 'connecting';
 let lastUserInfo: { name: string; phone: string; profilePicture?: string } | null = null;
+
+let sock;
 
 async function connectToWhatsApp() {
   const sessionPath = path.join(app.getPath('userData'), 'auth_info_baileys');
@@ -34,7 +38,6 @@ async function connectToWhatsApp() {
 
     if (mainWindow) {
       if (connection === 'open') {
-        console.log('Connected to WhatsApp!');
         lastStatus = 'connected';
 
         // Fetch user information
@@ -46,6 +49,13 @@ async function connectToWhatsApp() {
 
         mainWindow.webContents.send('whatsapp-user-info', lastUserInfo);
         mainWindow.webContents.send('whatsapp-status', 'connected');
+
+        const NOTIFICATION_TITLE = 'خدمة الواتساب'
+        const NOTIFICATION_BODY = 'خدمة الواتساب متاحة والحساب متصل بنجاح!'
+        new Notification({
+          title: NOTIFICATION_TITLE,
+          body: NOTIFICATION_BODY
+        }).show()
       }
 
       if (qr) {
@@ -61,6 +71,12 @@ async function connectToWhatsApp() {
           console.log('Reconnecting to WhatsApp...');
           connectToWhatsApp();
         } else {
+          const NOTIFICATION_TITLE = 'خدمة الواتساب'
+          const NOTIFICATION_BODY = 'خدمة الواتساب غير متاحة حالياً!'
+          new Notification({
+            title: NOTIFICATION_TITLE,
+            body: NOTIFICATION_BODY
+          }).show()
           console.log('Logged out. Deleting session folder...');
           fs.removeSync(sessionPath);
           lastStatus = 'disconnected';
@@ -73,6 +89,7 @@ async function connectToWhatsApp() {
   });
 
   socket.ev.on('creds.update', saveCreds);
+  sock = socket;
   return socket;
 }
 
@@ -106,7 +123,7 @@ function createWindow(): void {
     },
   });
 
-  //mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show();
@@ -169,6 +186,24 @@ app.whenReady().then(() => {
     userInfo: lastUserInfo,
   }));
 
+  // Handle notifications from the renderer process
+  ipcMain.on('send-notification', (event, { title, body }) => {
+    const notification = new Notification({ title, body });
+    notification.show();
+  });
+
+  serverProcess.on('message', (msg: { type: string; title?: string; message?: string }) => {
+    if (msg.type === 'notify-main' && msg.title && msg.message) {
+      console.log('Received notification from Express:', msg.title, msg.message);
+
+      // Example: Send to renderer process
+      // mainWindow?.webContents.send('notification', { title: msg.title, message: msg.message });
+
+      // Example: Show a native notification
+      new Notification({ title: msg.title, body: msg.message }).show();
+    }
+  });
+
   // macOS-specific behavior
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -181,4 +216,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 });
+
+
 
