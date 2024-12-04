@@ -5,14 +5,14 @@ import { useNavigate } from 'react-router-dom';
 import packageInfo from '../../../../../package.json';
 import { LoadingSpinner } from '../UI/LoadingSpinner';
 import appIcon from './app_icon.png'; // Adjust path if necessary
-import { useAppCode } from './useAppCode';
+import { useBlock } from './useBlock';
 import React from 'react';
 //import { Storage } from '@shared/utils/Storage';
 
-export function Checking() {
+export function Block() {
     const navigate = useNavigate();
 
-    const { loading, randomString, error, handleChecking, clearStorage } = useAppCode((data) => {
+    const { whyBlocked, loading, error, handleChecking, setWhyBlocked } = useBlock((data) => {
         const canUseSms = data.can_use_sms;
         const smsEndDate = data.sms_end_date;
         // Save
@@ -49,10 +49,9 @@ export function Checking() {
         localStorage.setItem('isBlocked', isBlocked);
         localStorage.setItem('whyBlocked', whyBlocked);
         window.context.sendStorageData('isBlocked', isBlocked)
+        setWhyBlocked(whyBlocked)
 
-        if (isBlocked) {
-            navigate('/blocked');
-        } else {
+        if (!isBlocked) {
             navigate('/dashboard');
         }
     });
@@ -150,6 +149,7 @@ export function Checking() {
             </Snackbar>
 
             {/* QR Code Section */}
+            {/* QR Code Section */}
             <Box sx={{ textAlign: 'center' }}>
                 <Typography
                     variant="h6"
@@ -157,34 +157,15 @@ export function Checking() {
                     sx={{
                         fontWeight: 500,
                         color: (theme: Theme) => theme.palette.text.secondary,
-                        marginTop: (theme: Theme) => theme.spacing(1),
+                        marginBottom: (theme: Theme) => theme.spacing(3),
                     }}
                 >
-                    الرجاء مسح الكود لتسجيل البيانات
+                    المعذرة لقد تم حظر برنامج سراج سوفت
                 </Typography>
-                <Paper
-                    elevation={4}
-                    sx={{
-                        padding: (theme: Theme) => theme.spacing(3),
-                        borderRadius: 4,
-                        marginTop: (theme: Theme) => theme.spacing(1),
-                        textAlign: 'center',
-                        display: 'inline-block',
-                        boxShadow: (theme: Theme) => `0px 6px 14px ${theme.palette.grey[300]}`,
-                        backgroundColor: (theme: Theme) => theme.palette.background.paper,
-                    }}
-                >
-                    <QRCodeSVG value={randomString || 'default'} size={200} />
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            marginTop: (theme: Theme) => theme.spacing(2),
-                            fontWeight: 500,
-                        }}
-                    >
-                        {randomString}
-                    </Typography>
-                </Paper>
+                <Alert severity="error" sx={{
+
+                    marginBottom: (theme: Theme) => theme.spacing(3),
+                }}>{whyBlocked}</Alert>
                 <Box sx={{ marginTop: (theme: Theme) => theme.spacing(3) }}>
                     <Button
                         variant="contained"
@@ -195,15 +176,9 @@ export function Checking() {
                         onClick={handleChecking}
                         disabled={loading}
                     >
-                        إبدأ التحقق
+                        تحقق مرة اخرى
                     </Button>
-                    <Button
-                        variant="outlined"
-                        sx={{ paddingX: (theme: Theme) => theme.spacing(3) }}
-                        onClick={clearStorage}
-                    >
-                        إعادة تعيين
-                    </Button>
+
                 </Box>
             </Box>
 

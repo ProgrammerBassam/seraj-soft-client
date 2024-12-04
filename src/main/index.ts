@@ -3,7 +3,7 @@ import * as childProcess from 'child_process';
 import { app, BrowserWindow, ipcMain, shell, Notification } from 'electron';
 import * as path from 'path';
 import { join } from 'path';
-import { DisconnectReason, makeWASocket, useMultiFileAuthState } from '@whiskeysockets/baileys';
+import { DisconnectReason, makeWASocket, useMultiFileAuthState, delay } from '@whiskeysockets/baileys';
 import fs from 'fs-extra';
 import { Boom } from '@hapi/boom'
 
@@ -142,6 +142,10 @@ function createWindow(): void {
   }
 }
 
+const isConnected = () => {
+  return sock?.user ? true : false;
+};
+
 /**
  * Sets up application event listeners and initializes the application.
  */
@@ -192,15 +196,79 @@ app.whenReady().then(() => {
     notification.show();
   });
 
-  serverProcess.on('message', (msg: { type: string; title?: string; message?: string }) => {
+  // Handle data storge
+  ipcMain.on('send-storage-data', (event, { key, value }) => {
+
+
+    // Send the value back to the child process
+    if (serverProcess.send) {
+      serverProcess.send({
+        type: 'local-storage-response',
+        title: key,
+        value,
+      });
+    }
+  });
+
+
+
+  serverProcess.on('message', async (msg: { type: string; title?: string; message?: string }) => {
     if (msg.type === 'notify-main' && msg.title && msg.message) {
-      console.log('Received notification from Express:', msg.title, msg.message);
 
-      // Example: Send to renderer process
-      // mainWindow?.webContents.send('notification', { title: msg.title, message: msg.message });
-
-      // Example: Show a native notification
       new Notification({ title: msg.title, body: msg.message }).show();
+    }
+
+    if (msg.type === 'send-whatsapp-message') {
+
+      let numberWA;
+
+      let success = false;
+      let response = 'ok';
+
+      try {
+        numberWA = "967" + msg.title + "@s.whatsapp.net";
+
+        if (isConnected()) {
+          const exist = await sock.onWhatsApp(numberWA);
+
+          if (exist?.jid || (exist && exist[0]?.jid)) {
+            const jid = exist.jid || exist[0].jid
+
+            await sock.presenceSubscribe(jid)
+            await delay(500)
+
+            await sock.sendPresenceUpdate('composing', jid)
+            await delay(2000)
+
+            await sock.sendPresenceUpdate('paused', jid)
+
+            await sock.sendMessage(jid, {
+              text: msg.message,
+            })
+
+            success = true
+          } else {
+            success = false
+            response = 'رقم المستلم ليس لديه حساب واتس'
+          }
+        } else {
+          success = false
+          response = 'لم نتمكن من إرسال رسالة الواتساب لأنك غير متصل'
+        }
+      } catch (err) {
+        success = false
+        response = 'خطأ غير متوقع'
+      }
+
+
+      // Send the value back to the child process
+      if (serverProcess.send) {
+        serverProcess.send({
+          type: 'send-whatsapp-response',
+          success: success,
+          data: response,
+        });
+      }
     }
   });
 
@@ -217,5 +285,26 @@ app.on('window-all-closed', () => {
   }
 });
 
+/**
+ *  const key = msg.title
+
+      mainWindow?.webContents
+        .executeJavaScript(`localStorage.getItem("${key}");`, true)
+        .then(result => {
+          // Retrieve the value from localStorage
+          const value = result;
+
+          console.log(`Value for ${key}: ${value}`);
+
+          // Send the value back to the child process
+          if (serverProcess.send) {
+            serverProcess.send({
+              type: 'local-storage-response',
+              title: key,
+              value,
+            });
+          }
+        });
+ */
 
 

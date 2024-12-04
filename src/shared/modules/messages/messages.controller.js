@@ -1,24 +1,18 @@
 const service = require('./messages.service.js');
 const response = require('../../utils/response.js');
+const store = require('store2');
+const { addMessageLog } = require('../../db/messages_logs.js');
+const { getHumanReadableDateTime } = require('../../utils/tims_utils');
 
 
 const SendWhatsApp = async (req, res) => {
 
-    if (typeof localStorage === "undefined" || localStorage === null) {
-        var LocalStorage = require('node-localstorage').LocalStorage;
-        localStorage = new LocalStorage('../../../../localstorage');
-    }
-
-
+    const receipt = req.query.receipt;
+    const msg = req.query.msg;
 
     try {
-        const canUseWhatsapp = localStorage.getItem("canUseWhatsapp");
-        const isBlocked = localStorage.getItem("isBlocked");
-
-        console.log("asdasd")
-        console.log(canUseWhatsapp)
-        console.log(isBlocked)
-
+        const canUseWhatsapp = store.get("canUseWhatsapp");
+        const isBlocked = store.get("isBlocked");
 
         if (isBlocked) {
             //  NotificationService.sendNotification('إرسال واتساب', 'المعذرة انت محظور من إستخدام نظام سراج!');
@@ -27,6 +21,8 @@ const SendWhatsApp = async (req, res) => {
             if (process.send) {
                 process.send({ type: 'notify-main', title, message });
             }
+
+            await addMessageLog(receipt, msg, getHumanReadableDateTime(), 1, 0, 'محظور');
             return response(res, 500, 'إرسال واتساب', 'المعذرة انت محظور من إستخدام نظام سراج');
         }
 
@@ -37,20 +33,21 @@ const SendWhatsApp = async (req, res) => {
                 process.send({ type: 'notify-main', title, message });
             }
 
+            await addMessageLog(receipt, msg, getHumanReadableDateTime(), 1, 0, 'غير مشترك');
             return response(res, 500, 'المعذرة انت لست مشترك في هذه الخدمة');
         }
 
-        const receipt = req.query.receipt;
-        const msg = req.query.msg;
 
-        const result = await service.SendWhatsApp({ receipt, msg });
+
+        const result = await service.SendWhatsApp(receipt, msg);
 
         if (result.success) {
             const title = 'رسائل الواتساب'
-            const message = 'تم إرسال رسالة الواتساب بنجاح'
+            const message = `تم إرسال واتساب للرقم ${receipt} بنجاح!`
             if (process.send) {
                 process.send({ type: 'notify-main', title, message });
             }
+            await addMessageLog(receipt, msg, getHumanReadableDateTime(), 1, 1, 'إرسال ناجح');
             return response(res, 200, { success: true });
         } else {
             const title = 'رسائل الواتساب'
@@ -58,17 +55,16 @@ const SendWhatsApp = async (req, res) => {
             if (process.send) {
                 process.send({ type: 'notify-main', title, message });
             }
+            await addMessageLog(receipt, msg, getHumanReadableDateTime(), 1, 0, result.data);
             return response(res, 500, result.data);
         }
     } catch (error) {
-        // window.context.sendNotification('إرسال واتساب', error.message);
-        // NotificationService.sendNotification('إرسال واتساب', error.message);
-        // Send the event to the main process
         const title = 'رسائل الواتساب'
         const message = error.message
         if (process.send) {
             process.send({ type: 'notify-main', title, message });
         }
+        await addMessageLog(receipt, msg, getHumanReadableDateTime(), 1, 0, error.message);
         return response(res, 500, error.message);
     }
 };

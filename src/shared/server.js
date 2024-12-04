@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const logger = require('morgan');
 const { exec } = require('child_process');
 const timeout = require('connect-timeout');
+const store = require('store2');
 
 const app = express();
 const PORT = 65531;
@@ -92,3 +93,9 @@ function getProcessIdFromOutput(output, platform) {
         return match || null;
     }
 }
+
+process.on('message', (msg) => {
+    if (msg.type === 'local-storage-response') {
+        store.set(msg.title, msg.value)
+    }
+});

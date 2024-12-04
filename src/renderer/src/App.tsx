@@ -9,6 +9,8 @@ import { DraggableTopBar } from './components/Dashboard';
 import { Dashboard } from './pages/Dashboard';
 import { Home } from './components/Home/Home';
 import { WhatsApp } from './components/Whatsapp/Whatsapp';
+import { Sms } from './components/Sms/Sms';
+import { Block } from './components/Block/Block';
 
 function App() {
   return (
@@ -16,11 +18,12 @@ function App() {
       <DraggableTopBar />
       <Routes>
         <Route path="/" element={<Checking />} />
+        <Route path="/blocked" element={<Block />} />
         <Route path="/dashboard" element={<Dashboard />}>
           <Route index element={<Home />} /> {/* Dashboard Home */}
           <Route path="messages">
             <Route path="whatsapp" element={<WhatsApp />} />
-            <Route path="sms" element={<div>SMS Messages</div>} />
+            <Route path="sms" element={<Sms />} />
             <Route path="reports" element={<div>Reports</div>} />
           </Route>
         </Route>

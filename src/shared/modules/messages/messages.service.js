@@ -1,17 +1,31 @@
+const SendWhatsApp = (receipt, msg) => {
+    return new Promise((resolve, reject) => {
+        try {
 
+            const title = receipt
+            const message = msg
 
-//const { sendMessage } = require('../../utils/whatsapp_service.js')
+            // Send the initial message to the main process
+            if (process.send) {
+                process.send({ type: 'send-whatsapp-message', title, message });
+            } else {
+                return reject(new Error('process.send is not available'));
+            }
 
-const SendWhatsApp = async (receipt, msg) => {
-    try {
+            // Listen for the response from the main process
+            process.on('message', (response) => {
+                if (response.type === 'send-whatsapp-response') {
+                    // Resolve the promise with the response data
+                    resolve({
+                        success: response.success || false,
+                        data: response.message || 'Unknown response',
+                    });
+                }
+            });
+        } catch (error) {
+            reject(error); // Reject the promise in case of an error
+        }
+    });
+};
 
-        const result = { success: false, data: 'لم نتمكن من إرسال رسالة الواتساب لأنك غير متصل' }// await sendMessage(receipt, msg)
-        return result
-
-    } catch (error) {
-
-        throw error
-    }
-}
-
-module.exports = { SendWhatsApp }
+module.exports = { SendWhatsApp };

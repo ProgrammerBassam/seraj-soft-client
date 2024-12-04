@@ -15,6 +15,7 @@ declare global {
       clearSession: () => void;
       getLastStatus: () => void;
       sendNotification: (title: string, body: string) => void;
+      sendStorageData: (key: string, value: string) => void;
     }
   }
 }
