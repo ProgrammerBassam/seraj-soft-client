@@ -11,6 +11,7 @@ import { Home } from './components/Home/Home';
 import { WhatsApp } from './components/Whatsapp/Whatsapp';
 import { Sms } from './components/Sms/Sms';
 import { Block } from './components/Block/Block';
+import { Users } from './components/Users/Users';
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="sms" element={<Sms />} />
             <Route path="reports" element={<div>Reports</div>} />
           </Route>
+          <Route path="users" element={<Users />} />
         </Route>
         <Route path="/settings" element={<div>Settings Page</div>} />
         <Route path="/about" element={<div>About Us Page</div>} />

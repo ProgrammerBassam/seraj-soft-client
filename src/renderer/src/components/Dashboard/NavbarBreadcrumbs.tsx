@@ -22,6 +22,7 @@ const arabicRouteNames: Record<string, string> = {
     messages: 'خدمة الرسائل',
     whatsapp: 'واتساب',
     sms: 'الرسائل النصية',
+    users: 'المستخدمين',
     reports: 'التقارير',
     settings: 'الإعدادات',
     about: 'من نحن',

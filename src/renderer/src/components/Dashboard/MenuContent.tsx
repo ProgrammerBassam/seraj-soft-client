@@ -23,14 +23,14 @@ import { useNavigate } from 'react-router-dom';
 const mainListItems = [
     { text: 'الرئيسية', icon: <HomeRoundedIcon />, disabled: false, page: '/dashboard' },
     { text: 'خدمة الرسائل', icon: <MailOutlineIcon />, hasSublist: true, disabled: false },
-    { text: 'المستخدمين (قريباً)', icon: <PeopleRoundedIcon />, disabled: true },
+    { text: 'المستخدمين', icon: <PeopleRoundedIcon />, disabled: false, page: '/dashboard/users' },
     { text: 'المبيعات (قريباً)', icon: <AssignmentRoundedIcon />, disabled: true },
 ];
 
 const sublistItems = [
     { text: 'واتساب', icon: <WhatsApp />, disabled: false, page: '/dashboard/messages/whatsapp' },
     { text: 'الرسائل النصية', icon: <DraftsIcon />, disabled: false, page: '/dashboard/messages/sms' },
-    { text: 'التقارير', icon: <AnalyticsRoundedIcon />, disabled: false, page: '/dashboard/messages/reports' },
+    { text: 'التقارير', icon: <AnalyticsRoundedIcon />, disabled: true, page: '/dashboard/messages/reports' },
 ];
 
 const secondaryListItems = [
