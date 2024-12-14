@@ -1,4 +1,4 @@
-const sqlite3 = require('sqlite3').verbose();
+/*const sqlite3 = require('sqlite3').verbose();
 const path = require('path');
 
 // Create or connect to a database file
@@ -32,4 +32,4 @@ db.serialize(() => {
     );
 });
 
-module.exports = db;
+module.exports = db;*/
