@@ -1,0 +1,44 @@
+name: Build and Publish Windows App
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger workflow on version tags (e.g., v1.0.0)
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # Step 4: Build the app
+      - name: Build Windows App
+        run: npm run make
+
+      # Step 5: Upload Build Artifacts
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-installer
+          path: out/make/squirrel.windows/*.exe  # Path to the generated installer
+
+      # Step 6: Publish Release on GitHub
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        with:
+          files: out/make/squirrel.windows/*.exe
