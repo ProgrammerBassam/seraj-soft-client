@@ -108,11 +108,11 @@ function createWindow(): void {
     autoHideMenuBar: true,
     center: true,
     title: 'سراج سوفت',
-    frame: false,
+    frame: process.platform !== 'win32',
     vibrancy: 'under-window',
     visualEffectState: 'active',
     titleBarStyle: 'hidden',
-    transparent: true, // Enable transparency
+    transparent: process.platform === 'darwin', // Enable only on macOS
     trafficLightPosition: { y: 15, x: 10 },
     icon: './assets/mac_icon.icns',
     webPreferences: {
